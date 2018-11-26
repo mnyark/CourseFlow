@@ -1,0 +1,49 @@
+{% extends 'registration/base.html' %}
+{% block title %}CourseFlow - Register{% endblock %}
+{% block content %}
+	<div id="container">
+		<h4 style="text-align: center;">Register your account</h4>
+		<form method="POST" action="/register">
+			<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" required>
+			<div class="form-group">
+				<label for="firstname">First Name</label>
+				<input type="name" id="firstname" name="firstname" class="form-control" required>
+			</div>
+			<div class="form-group">
+				<label for="firstname">Last Name</label>
+				<input type="name" id="lastname" name="lastname" class="form-control" required>
+			</div>
+			<div class="form-group">
+				<label for="username">Email</label>
+				<input type="email" id="email" name="email" class="form-control" required>
+			</div>
+			<div class="form-group">
+				<label for="password">Major</label>
+				<select class="form-control" name="major" required>
+					{% for major in majors %}
+					<option value="{{major.pk}}">{{major}}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="password">Concentration</label>
+				<select class="form-control" name="concentration" required>
+					{% for c in concentrations %}
+					<option value="{{c.pk}}">{{c}}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="password">Password</label>
+				<input type="password" id="password" name="password" class="form-control" required>
+			</div>
+			<div class="form-group">
+				<label for="password">Verify Password</label>
+				<input type="password" id="verify-password" name="password2" class="form-control" required>
+			</div>
+			<div class="d-flex justify-content-center">
+            	<input class="btn btn-primary" type="submit" name="Done">  
+          	</div> 
+		</form>	
+	</div>
+{% endblock %}

@@ -16,11 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from main import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('main.urls')),
-    path('', views.index)
+    path('', views.index, name='index'),
+    path('data', views.data),
+    path('add_courses', views.add_courses, name='add_courses'),
+    path('login', views.login, name='login'),
+    path('register', views.register, name='register'),
+    path('semester', views.semester, name='semester'),
+    path('profile', views.profile, name='profile'),
+    path('logout', views.logout, name='logout'),
 ]
 
 admin.site.site_header = 'CourseFlow'

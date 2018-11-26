@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CourseFlow</title>
+</head>
+<body onload="init()">
+<p id="courseflow">Courseflow</p>
+<div id="diagram" style="border: solid 1px black; width:1000px; height:1000px"></div>
+<script src="{{ static('js/go.js') }}"></script>
+<script type="text/javascript">
+async function init() {
+
+  const response = await fetch('http://localhost:8000/data');
+  const data = await response.json();
+  const courses = data.courses;
+  const graph = data.graph;
+
+  // console.log(courses, graph);
+  
+  const $ = go.GraphObject.make; // for conciseness in defining templates
+
+  const diagram = $(
+    go.Diagram,
+    "diagram", // create a Diagram for the DIV HTML element
+    {
+      // automatically scale the diagram to fit the viewport's size
+      initialAutoScale: go.Diagram.Uniform,
+      // start everything in the middle of the viewport
+      initialContentAlignment: go.Spot.Top,
+      // position all of the nodes and route all of the links
+      layout: $(go.LayeredDigraphLayout, {
+        direction: 90,
+        layerSpacing: 50,
+        columnSpacing: 30,
+        setsPortSpots: false
+      })
+    }
+  );
+
+  diagram.addDiagramListener("ObjectSingleClicked", function(e) {
+    var part = e.subject.part;
+    // alert(part.data.description);
+    let p = document.getElementById("courseflow");
+    p.innerText = part.data.description;
+  });
+  
+  // define link template
+  diagram.linkTemplate = $(
+    go.Link, // the whole link panel
+    { curve: go.Link.Bezier, toShortLength: 2 },
+    $(
+      go.Shape, // the link shape
+      { strokeWidth: 1.5 }
+    ),
+    $(
+      go.Shape, // the arrowhead
+      { toArrow: "Standard", stroke: null }
+    )
+  );
+
+  // define a simple Node template
+  diagram.nodeTemplate = $(
+    go.Node,
+    "Auto", // the Shape will go around the TextBlock
+    $(
+      go.Shape,
+      "RoundedRectangle",
+      { strokeWidth: 0, fill: "white" },
+      // Shape.fill is bound to Node.data.color
+      new go.Binding("fill", "color")
+    ),
+    $(
+      go.TextBlock,
+      { margin: 12 }, // some room around the text
+      // TextBlock.text is bound to Node.data.key
+      new go.Binding("text", "code")
+    )
+  );
+
+  // but use the default Link template, by not setting Diagram.linkTemplate
+
+  // create the model data that will be represented by Nodes and Links
+  diagram.model = new go.GraphLinksModel(
+    courses,
+    graph
+  );
+}
+</script>
+</body>
+</html>

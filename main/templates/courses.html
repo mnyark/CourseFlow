@@ -1,0 +1,49 @@
+
+<html>
+  <head>
+    <title>Courseflow - Courses</title>
+    <link href="{{ static('css/multi-select.css') }}" rel="stylesheet">
+    <link href="{{ static('css/bootstrap.min.css') }}" rel="stylesheet">
+    <style type="text/css">
+      .ms-container{
+        width: 100%;
+        margin-top: 40px;
+      }
+      .ms-elem-selectable, .ms-elem-selection{
+        text-align: center;
+      }
+      .ms-selectable .ms-list, .ms-selection .ms-list {
+          height: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-light bg-light">
+        <h4 style="text-align: center" class="container">CourseFlow</h4>
+    </nav>
+    <div class="container">
+      <h1 style="text-align: center">Select courses you've taken</h1>
+      <form method="POST" action="/add_courses">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" required>
+        <div class="form-group">
+          <select multiple="multiple" id="courses" name="my-select[]">
+          {% for course in courses %}
+            <option value="{{course.code}}">({{course.code}}){{course.title}}</option>
+          {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="d-flex justify-content-center">
+            <input class="btn btn-primary" type="submit" name="Done">  
+          </div> 
+        </div>
+      </form>
+    </div>
+    <script type="text/javascript" src="{{ static('js/jquery.js')}}"></script>
+    <script src="{{ static('js/jquery.multi-select.js') }}"></script>
+  </body>
+</html>
+
+<script type="text/javascript">
+  $('#courses').multiSelect()
+</script>
